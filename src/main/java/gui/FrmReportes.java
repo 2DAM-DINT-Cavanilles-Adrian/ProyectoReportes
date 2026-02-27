@@ -26,6 +26,7 @@ public class FrmReportes extends javax.swing.JFrame {
     public FrmReportes() {
         initComponents();
         mostrarReporte();
+        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // La ventana se abre a pantalla completa
     }
     
     private void mostrarReporte() {
@@ -74,18 +75,25 @@ public class FrmReportes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        pnlVisor = new javax.swing.JPanel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
+
+        pnlVisor.setBackground(new java.awt.Color(239, 243, 243));
+
+        javax.swing.GroupLayout pnlVisorLayout = new javax.swing.GroupLayout(pnlVisor);
+        pnlVisor.setLayout(pnlVisorLayout);
+        pnlVisorLayout.setHorizontalGroup(
+            pnlVisorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        pnlVisorLayout.setVerticalGroup(
+            pnlVisorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
+
+        getContentPane().add(pnlVisor);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -116,5 +124,6 @@ public class FrmReportes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel pnlVisor;
     // End of variables declaration//GEN-END:variables
 }
