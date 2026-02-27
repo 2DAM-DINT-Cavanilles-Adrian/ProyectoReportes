@@ -11,6 +11,10 @@ import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.swing.JRViewer;
+import java.awt.BorderLayout;
+import java.sql.*;
 
 /**
  *
@@ -30,41 +34,40 @@ public class FrmReportes extends javax.swing.JFrame {
     }
     
     private void mostrarReporte() {
-    try {
-        // 1. Conexión (Asegúrate de que XAMPP esté encendido)
-        Connection conn = DriverManager.getConnection(
-            "jdbc:mariadb://localhost:3306/productos_bd", "root", "");
-        
-                java.sql.Statement st = conn.createStatement();
-        java.sql.ResultSet rs = st.executeQuery("SELECT * FROM productos");
-        if (!rs.next()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "¡ATENCIÓN! Java conectó bien, pero la tabla está VACÍA.");
-        } else {
-            System.out.println("¡ÉXITO! Java está leyendo datos. El primero es: " + rs.getString("nombre"));
+        try {
+            // 1. Establecer conexión
+            Connection conn = DriverManager.getConnection(
+                "jdbc:mariadb://localhost:3306/productos_bd", "root", "");
+
+            // 2. Cargar el archivo compilado .jasper
+            InputStream is = getClass().getResourceAsStream("/reports/reporte_productos.jasper");
+
+            if (is == null) {
+                throw new Exception("No se encontró el archivo .jasper. Revisa la carpeta resources.");
+            }
+
+            // 3. Llenar el reporte con los datos de la BD
+            JasperPrint jp = JasperFillManager.fillReport(is, null, conn);
+
+            // 4. CREAR EL VISOR (JRViewer)
+            // Esto crea el componente visual con barras de herramientas y zoom
+            JRViewer viewer = new JRViewer(jp);
+
+            // 5. INCRUSTAR EN EL PANEL
+            pnlVisor.setLayout(new BorderLayout()); // Aseguramos que use BorderLayout
+            pnlVisor.removeAll(); // Limpiamos cualquier rastro previo
+            pnlVisor.add(viewer, BorderLayout.CENTER); // Añadimos el visor al centro
+
+            // 6. REFRESCAR LA INTERFAZ
+            // Sin esto, el panel podría quedarse gris hasta que redimensiones la ventana
+            pnlVisor.revalidate();
+            pnlVisor.repaint();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al cargar reporte: " + ex.getMessage());
         }
-
-        // 2. Cargar el archivo .jasper desde la carpeta de recursos
-        InputStream reporte = getClass().getResourceAsStream("/reports/reporte_productos.jasper");
-        
-        if (reporte == null) {
-            throw new Exception("No se pudo encontrar el archivo .jasper");
-        }
-
-        // 3. Llenar el reporte con datos
-        JasperPrint print = JasperFillManager.fillReport(reporte, null, conn);
-
-        // 4. Mostrarlo en el visor de Jasper
-        JasperViewer viewer = new JasperViewer(print, false);
-        viewer.setTitle("Informe de Productos");
-        viewer.setVisible(true);
-
-        // 5. Cerrar esta ventana auxiliar
-        this.dispose(); 
-        
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }}
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
