@@ -30,7 +30,12 @@ public class FrmReportes extends javax.swing.JFrame {
     public FrmReportes() {
         initComponents();
         mostrarReporte();
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setTitle("Informe");
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // La ventana se abre a pantalla completa
+        this.setTitle("Visor de Productos - Sistema de Gestión");
+        this.setLocationRelativeTo(null); // Centra la ventana si no está maximizada
     }
     
     private void mostrarReporte() {
@@ -49,6 +54,12 @@ public class FrmReportes extends javax.swing.JFrame {
             // 3. Llenar el reporte con los datos de la BD
             JasperPrint jp = JasperFillManager.fillReport(is, null, conn);
 
+            if (jp.getPages().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay datos para mostrar en el informe.");
+                this.dispose(); // Cerramos la ventana si está vacía
+                return;
+            }
+            
             // 4. CREAR EL VISOR (JRViewer)
             // Esto crea el componente visual con barras de herramientas y zoom
             JRViewer viewer = new JRViewer(jp);
@@ -80,7 +91,7 @@ public class FrmReportes extends javax.swing.JFrame {
 
         pnlVisor = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         pnlVisor.setBackground(new java.awt.Color(239, 243, 243));
